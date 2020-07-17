@@ -23,32 +23,48 @@ def lat_lon_iss():
 
 def turtle_map(latlon):
     tr = turtle
-    iss = tr.Turtle()
     tr.Screen().register_shape('iss.gif')
     tr.Screen().bgpic('map.gif')
     tr.Screen().setup(720, 360)
     tr.Screen().setworldcoordinates(-180, -90, 180, 90)
+    indi_turtle()
+    iss_turtle(latlon)
+    tr.Screen().exitonclick()
+    pass
+
+
+def indi_turtle():
+    indi = turtle.Turtle()
+    indi.shape('circle')
+    indi.color('blue')
+    indi.penup()
+    indi.goto(-86.15, 39.76)
+    indi.shapesize(.5, .5)
+    indi.write(indi_when())
+    pass
+
+
+def iss_turtle(latlon):
+    iss = turtle.Turtle()
     iss.shape('iss.gif')
     iss.penup()
     iss.goto(float(latlon.get('longitude')),
              float(latlon.get('latitude')))
-    tr.Screen().exitonclick()
     pass
 
 
 def indi_when():
     r = requests.get(
         'http://api.open-notify.org/iss-pass.json', {'lat': '39.768', 'lon': '-86.158'})
-    print('The next time the ISS will passover Indianapolis is ' +
-          time.ctime(r.json().get('response')[0].get('risetime')))
-    pass
+    statment = ('The next time the ISS\n will passover Indianapolis is\n ' +
+                time.ctime(r.json().get('response')[0].get('risetime')))
+    return statment
 
 
 def main():
     people_in_space()
     latlon = lat_lon_iss()
     turtle_map(latlon)
-    indi_when()
     pass
 
 
